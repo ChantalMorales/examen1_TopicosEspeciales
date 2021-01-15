@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar color='success'>
+    <ion-title>
+      Chat
+      <ion-button (click)="logout()" style='margin-left: 20px'>Salir</ion-button>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-card *ngFor='let chat of chats'>
+    <ion-card-header>
+      {{ chat.email }} ha enviado:
+    </ion-card-header>
+    <ion-card-content>
+      {{ chat.message }}
+      <img src='{{ chat.image }}' *ngIf='chat.image'>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-input placeholder='Enter text' [(ngModel)]='message'></ion-input>
+    <ion-buttons slot='end'>
+      <ion-button (click)='sendMessage()'>
+        <ion-icon name="caret-forward-circle-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)='presentActionSheetCamera()'>
+        <ion-icon name="camera-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+
