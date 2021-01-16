@@ -45,7 +45,6 @@ export class DashboardPage implements OnInit {
       console.log( 'err', err );
     } );
     this.firebaseP.allMessages().on( 'value', ( dataSnap ) => {
-      const key = '';
       this.chats = [];
       dataSnap.forEach( ( data ) => {
         if( data.val().message ) {
