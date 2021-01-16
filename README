@@ -4,3 +4,6 @@ En este proyecto se presenta un chat con autenticación de email y contraseña
 Ademas se utiliza como fuente de almacenamiento Firebase- Realtime, los metodos utilizados de realtime son los de post, get y storage para publicar, obtener mensajes e imágenes 
 Se utilizo como framework Angular. 
 En esta app se puede enviar mensajes e imágenes y de igual manera leer lo del los otros usuarios. 
+Para encriptar los mensajes se utiliza una librería llamada crypto-js.
+a continuación un video de la utilización de la app. 
+
