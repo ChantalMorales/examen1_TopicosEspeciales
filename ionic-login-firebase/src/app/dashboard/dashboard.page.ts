@@ -5,6 +5,7 @@ import { AuthenticateService } from '../services/authentication.service';
 import { FirebaseService } from '../services/firebase.service';
 import { CameraOptions, Camera } from '@ionic-native/camera/ngx';
 import firebase from 'firebase/app';
+import * as CryptoJS from 'crypto-js';
 
 @Component( {
   selector: 'app-dashboard',
@@ -18,7 +19,9 @@ export class DashboardPage implements OnInit {
   message: any;
   uid: any;
   tmpImage: any = undefined;
-  random = Math.floor(Math.random() * 500);
+  random = Math.floor( Math.random() * 500 );
+  encryptedMessage = '';
+  decryptedMessage = '';
 
 
   constructor(
@@ -32,7 +35,6 @@ export class DashboardPage implements OnInit {
   ngOnInit() {
 
     this.authService.userDetails().subscribe( res => {
-      console.log( 'res', res );
       if( res !== null ) {
         this.userEmail = res.email;
         this.uid = res.uid;
@@ -43,26 +45,51 @@ export class DashboardPage implements OnInit {
       console.log( 'err', err );
     } );
     this.firebaseP.allMessages().on( 'value', ( dataSnap ) => {
+      const key = '';
       this.chats = [];
       dataSnap.forEach( ( data ) => {
-        this.chats.push( { ...data.val() } );
+        if( data.val().message ) {
+          this.decryption( data.val().message );
+          this.chats.push( {
+            uid: data.val().uid,
+            email: data.val().email,
+            message: this.decryptedMessage,
+          } );
+        } else {
+          this.decryption( data.val().image );
+          this.chats.push( {
+            uid: data.val().uid,
+            email: data.val().email,
+            image: this.decryptedMessage,
+          } );
+        }
+
       } );
     } );
 
   }
 
+  encryption( text ) {
+    this.encryptedMessage = CryptoJS.AES.encrypt( text, 'secret key 123', 'secret key 123' ).toString();
+  }
+
+  decryption( text ) {
+    this.decryptedMessage = CryptoJS.AES.decrypt( text, 'secret key 123', 'secret key 123' ).toString( CryptoJS.enc.Utf8 );
+  }
+
   async sendMessage() {
     let messageSent = {};
+    this.encryption(this.message);
     if( this.tmpImage !== undefined ) {
       messageSent = {
         uid: this.uid,
-        image: this.message,
+        image: this.encryptedMessage,
         email: this.userEmail
       };
     } else {
       messageSent = {
         uid: this.uid,
-        message: this.message,
+        message: this.encryptedMessage,
         email: this.userEmail
       };
     }
